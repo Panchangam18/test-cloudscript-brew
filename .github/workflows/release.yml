@@ -71,6 +71,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
       - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -88,38 +89,71 @@ jobs:
         with:
           repository: o37-autoforge/homebrew-cloudscript
           token: ${{ secrets.BREW_TAP_TOKEN }}
+      - name: Debug environment
+        run: |
+          echo "GitHub ref: $GITHUB_REF"
+          echo "GitHub repository: ${{ github.repository }}"
+          echo "Current directory contents:"
+          ls -la
       - name: Download release artifacts and update formula
         run: |
           # Get version from tag
           VERSION=${GITHUB_REF#refs/tags/v}
+          echo "Processing version: $VERSION"
           
-          # Get release ID
-          RELEASE_ID=$(curl -s -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/latest" | \
-            jq -r '.id')
+          # Get the release information including assets
+          REPO_PATH="${{ github.repository }}"
+          echo "Repository path: $REPO_PATH"
           
-          # Download and get SHA256 values
-          ARM64_SHA256=$(curl -sL -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | \
-            jq -r '.[] | select(.name=="cloud-cli-darwin-arm64.tar.gz.sha256").browser_download_url' | \
-            xargs curl -sL | cut -d' ' -f1)
+          RELEASE_INFO=$(curl -s -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
+            "https://api.github.com/repos/${REPO_PATH}/releases/tags/v${VERSION}")
           
-          AMD64_SHA256=$(curl -sL -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | \
-            jq -r '.[] | select(.name=="cloud-cli-darwin-amd64.tar.gz.sha256").browser_download_url' | \
-            xargs curl -sL | cut -d' ' -f1)
+          echo "Got release info for v${VERSION}"
           
-          LINUX_SHA256=$(curl -sL -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets" | \
-            jq -r '.[] | select(.name=="cloud-cli-linux-amd64.tar.gz.sha256").browser_download_url' | \
-            xargs curl -sL | cut -d' ' -f1)
+          # Extract assets URL
+          ASSETS_URL=$(echo "$RELEASE_INFO" | jq -r '.assets_url')
+          echo "Assets URL: $ASSETS_URL"
+          
+          # Function to get SHA from asset
+          get_sha() {
+            local pattern=$1
+            local sha=$(curl -sL -H "Authorization: token ${{ secrets.BREW_TAP_TOKEN }}" \
+              "$ASSETS_URL" | \
+              jq -r ".[] | select(.name | test(\"$pattern\")) | .browser_download_url" | \
+              xargs curl -sL | cut -d' ' -f1)
+            echo "$sha"
+          }
+          
+          # Get SHA256 values
+          ARM64_SHA256=$(get_sha "darwin-arm64.tar.gz.sha256$")
+          echo "ARM64 SHA256: $ARM64_SHA256"
+          
+          AMD64_SHA256=$(get_sha "darwin-amd64.tar.gz.sha256$")
+          echo "AMD64 SHA256: $AMD64_SHA256"
+          
+          LINUX_SHA256=$(get_sha "linux-amd64.tar.gz.sha256$")
+          echo "LINUX SHA256: $LINUX_SHA256"
+          
+          # Verify we got all SHAs
+          if [ -z "$ARM64_SHA256" ] || [ -z "$AMD64_SHA256" ] || [ -z "$LINUX_SHA256" ]; then
+            echo "Error: Failed to get one or more SHA256 values"
+            echo "Release info:"
+            echo "$RELEASE_INFO" | jq '.'
+            exit 1
+          fi
+          
+          echo "Formula file before changes:"
+          cat Formula/cloudscript.rb
           
           # Update formula file
           sed -i "s/version \".*\"/version \"$VERSION\"/" Formula/cloudscript.rb
-          sed -i "s/v[0-9.]*\/cloud-cli/v$VERSION\/cloud-cli/g" Formula/cloudscript.rb
+          sed -i "s|v[0-9.]*\/cloud-cli|v$VERSION\/cloud-cli|g" Formula/cloudscript.rb
           sed -i "s/sha256 \".*\".*arm64/sha256 \"$ARM64_SHA256\"  # arm64/" Formula/cloudscript.rb
           sed -i "s/sha256 \".*\".*amd64/sha256 \"$AMD64_SHA256\"  # amd64/" Formula/cloudscript.rb
           sed -i "s/sha256 \".*\".*linux/sha256 \"$LINUX_SHA256\"  # linux/" Formula/cloudscript.rb
+          
+          echo "Formula file after changes:"
+          cat Formula/cloudscript.rb
       - name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Action'
