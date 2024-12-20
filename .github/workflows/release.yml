@@ -145,12 +145,14 @@ jobs:
           echo "Formula file before changes:"
           cat Formula/cloudscript.rb
           
-          # Update formula file
+          # Update formula file with more precise sed patterns
           sed -i "s/version \".*\"/version \"$VERSION\"/" Formula/cloudscript.rb
           sed -i "s|v[0-9.]*\/cloud-cli|v$VERSION\/cloud-cli|g" Formula/cloudscript.rb
-          sed -i "s/sha256 \".*\".*arm64/sha256 \"$ARM64_SHA256\"  # arm64/" Formula/cloudscript.rb
-          sed -i "s/sha256 \".*\".*amd64/sha256 \"$AMD64_SHA256\"  # amd64/" Formula/cloudscript.rb
-          sed -i "s/sha256 \".*\".*linux/sha256 \"$LINUX_SHA256\"  # linux/" Formula/cloudscript.rb
+          
+          # More specific SHA256 replacements
+          sed -i "/if Hardware::CPU.arm?/,/else/s/sha256 \".*\"/sha256 \"$ARM64_SHA256\"/" Formula/cloudscript.rb
+          sed -i "/else/,/end/s/sha256 \".*\"/sha256 \"$AMD64_SHA256\"/" Formula/cloudscript.rb
+          sed -i "/on_linux/,/end/s/sha256 \".*\"/sha256 \"$LINUX_SHA256\"/" Formula/cloudscript.rb
           
           echo "Formula file after changes:"
           cat Formula/cloudscript.rb
