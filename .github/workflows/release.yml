@@ -19,6 +19,7 @@ jobs:
               cd dist/ &&
               tar czf ../cloud-cli-darwin-amd64.tar.gz cloud-cli
             OUT_FILE_NAME: cloud-cli-darwin-amd64.tar.gz
+            SHA_CMD: shasum -a 256
           - os: macos-14
             TARGET: macos-arm64
             CMD_BUILD: >
@@ -26,6 +27,7 @@ jobs:
               cd dist/ &&
               tar czf ../cloud-cli-darwin-arm64.tar.gz cloud-cli
             OUT_FILE_NAME: cloud-cli-darwin-arm64.tar.gz
+            SHA_CMD: shasum -a 256
           - os: ubuntu-latest
             TARGET: linux-amd64
             CMD_BUILD: >
@@ -33,6 +35,7 @@ jobs:
               cd dist/ &&
               tar czf ../cloud-cli-linux-amd64.tar.gz cloud-cli
             OUT_FILE_NAME: cloud-cli-linux-amd64.tar.gz
+            SHA_CMD: sha256sum
 
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +56,7 @@ jobs:
         
       - name: Generate SHA256
         run: |
-          sha256sum ${{ matrix.OUT_FILE_NAME }} > ${{ matrix.OUT_FILE_NAME }}.sha256
+          ${{ matrix.SHA_CMD }} ${{ matrix.OUT_FILE_NAME }} > ${{ matrix.OUT_FILE_NAME }}.sha256
           
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
