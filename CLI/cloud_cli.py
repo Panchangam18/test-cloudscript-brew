@@ -1433,7 +1433,7 @@ def version_callback(ctx, param, value):
     """Print version information"""
     if not value or ctx.resilient_parsing:
         return
-    click.echo("Cloud CLI v1.0.0")
+    click.echo("Cloudscript CLI v1.0.0")
     ctx.exit()
 
 def init_config_dir():
