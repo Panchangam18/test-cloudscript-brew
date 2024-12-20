@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: cloudscript-cli
+Version: 0.1.0
+Summary: Cloudscript combines the functionalities of Terraform, Kubernetes, and Ansible, under one, simple syntax.
+Home-page: https://github.com/o37-autoforge/cloud
+Author: Forge
+Author-email: team@tryforge.ai
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+License-File: LICENSE.txt
+Requires-Dist: lark==1.2.2
+Requires-Dist: python-hcl2==5.1.1
+Requires-Dist: PyYAML==6.0.2
+Requires-Dist: ansible==11.0.0
+Requires-Dist: rich==13.9.4
+Requires-Dist: boto3==1.35.72

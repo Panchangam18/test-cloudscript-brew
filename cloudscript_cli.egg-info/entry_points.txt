@@ -1,0 +1,2 @@
+[console_scripts]
+cloud = CLI.cloud_cli:cli

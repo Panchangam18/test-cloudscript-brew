@@ -1,0 +1,103 @@
+Project Root (cloud/)
+├── .gitattributes
+├── .gitignore
+├── main.py
+├── readme.md
+├── requirements.txt
+├── schema.json
+├── setup.py
+├── test_mapping.py
+│
+├── all_tests/
+│   ├── test1/
+│   │   ├── cloud/
+│   │   │   ├── main.cloud
+│   │   │   ├── nginx.conf
+│   │   │   └── role.json
+│   │   └── IaC/
+│   │       ├── main.tf.json
+│   │       ├── mappings.json
+│   │       ├── playbook.yml
+│   │       └── resources.yml
+│   │
+│   ├── test2/
+│   │   ├── cloud/
+│   │   │   └── main.cloud
+│   │   └── IaC/
+│   │       ├── main.tf.json
+│   │       ├── mappings.json
+│   │       ├── playbook.yml
+│   │       └── resources.yml
+│   │
+│   ├── test3/
+│   │   ├── cloud/
+│   │   │   └── main.cloud
+│   │   └── IaC/
+│   │       ├── main.tf.json
+│   │       ├── mappings.json
+│   │       ├── playbook.yml
+│   │       └── resources.yml
+│   │
+│   └── test4/
+│       ├── cloud/
+│       │   └── main.cloud
+│       └── IaC/
+│           ├── main.tf.json
+│           ├── mappings.json
+│           ├── playbook.yml
+│           └── resources.yml
+│
+├── build/
+│
+├── CLI/
+│   ├── __init__.py
+│   ├── backend_vars_gen.py
+│   ├── cloud_cli.py
+│   ├── error_mapping/
+│   │   ├── __init__.py
+│   │   └── error_mappers.py
+│   ├── executors/
+│   │   ├── __init__.py
+│   │   ├── apply.py
+│   │   ├── destroy.py
+│   │   ├── new_apply.py
+│   │   └── plan.py
+│   └── utils/
+│       ├── __init__.py
+│       ├── file_preprocessing.py
+│       └── key_management.py
+│
+├── cloud_cli.egg-info/
+│
+├── converter/
+│   ├── __init__.py
+│   ├── ansible.py
+│   ├── convert_test.cloud
+│   ├── data_and_types.py
+│   ├── kubernetes.py
+│   ├── main.py
+│   ├── terraform.py
+│   ├── utils.py
+│   └── vars_generator.py
+│
+└── transpiler/
+    ├── __init__.py
+    ├── ast_nodes.py
+    ├── builtin_types.py
+    ├── lexer.py
+    ├── main.py
+    ├── parser.py
+    ├── test.py
+    ├── tokentypes.py
+    ├── transformer.py
+    ├── type_system.py
+    └── transpiler_tests/
+        ├── test1.hcl
+        ├── test2.hcl
+        ├── test3.hcl
+        ├── test4.hcl
+        ├── test5.hcl
+        ├── test6.hcl
+        ├── test7.hcl
+        ├── test8.hcl
+        └── test9.hcl

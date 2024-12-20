@@ -1,0 +1,72 @@
+├── CLI/
+│   ├── converter/
+│   │   ├── ansible.py
+│   │   ├── data_and_types.py
+│   │   ├── kubernetes.py
+│   │   ├── main.py
+│   │   ├── terraform.py
+│   │   ├── utils.py
+│   │   └── vars_generator.py
+│   ├── error_mapping/
+│   │   └── error_mappers.py
+│   ├── executors/
+│   │   ├── apply.py
+│   │   ├── destroy.py
+│   │   ├── new_apply.py
+│   │   └── plan.py
+│   ├── transpiler/
+│   │   ├── ast_nodes.py
+│   │   ├── builtin_types.py
+│   │   ├── lexer.py
+│   │   ├── main.py
+│   │   ├── parser.py
+│   │   ├── test.py
+│   │   ├── tokentypes.py
+│   │   ├── transformer.py
+│   │   └── type_system.py
+│   ├── utils/
+│   │   ├── file_preprocessing.py
+│   │   └── key_management.py
+│   ├── backend_vars_gen.py
+│   └── cloud_cli.py
+├── all_tests/
+│   ├── test1/
+│   │   ├── cloud/
+│   │   │   ├── main.cloud
+│   │   │   ├── nginx.conf
+│   │   │   └── role.json
+│   │   └── IaC/
+│   │       ├── main.tf.json
+│   │       ├── mappings.json
+│   │       ├── playbook.yml
+│   │       └── resources.yml
+│   ├── test2/
+│   ├── test3/
+│   └── test4/
+├── transpiler/
+│   ├── transpiler_tests/
+│   │   ├── test1.hcl
+│   │   ├── test2.hcl
+│   │   └── ... (through test9.hcl)
+│   ├── ast_nodes.py
+│   ├── builtin_types.py
+│   ├── lexer.py
+│   ├── main.py
+│   ├── parser.py
+│   ├── test.py
+│   ├── tokentypes.py
+│   ├── transformer.py
+│   └── type_system.py
+├── converter/
+│   ├── ansible.py
+│   ├── data_and_types.py
+│   ├── kubernetes.py
+│   ├── main.py
+│   ├── terraform.py
+│   ├── utils.py
+│   └── vars_generator.py
+├── main_conversion.py
+├── requirements.txt
+├── schema.json
+├── setup.py
+└── testing.py
