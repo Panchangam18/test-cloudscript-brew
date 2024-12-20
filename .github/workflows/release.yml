@@ -86,7 +86,7 @@ jobs:
       - name: Checkout brew tap repo
         uses: actions/checkout@v4
         with:
-          repository: Panchangam18/test-cloudscript-brew
+          repository: o37-autoforge/homebrew-cloudscript
           token: ${{ secrets.BREW_TAP_TOKEN }}
       - name: Download release artifacts and update formula
         run: |
